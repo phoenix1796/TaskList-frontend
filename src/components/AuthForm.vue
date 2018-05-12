@@ -87,11 +87,10 @@
 
 <script>
 import axios from "axios";
-
-const API_URL = "http://127.0.0.1:8080";
+import API_URL from "../utils/Config";
 
 export default {
-  name: "HelloWorld",
+  name: "AuthForm",
   data: function() {
     return {
       loggedIn: false,
