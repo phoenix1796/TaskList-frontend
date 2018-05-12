@@ -1,13 +1,31 @@
 <template>
-<div>
-<h4>Current Tasks:</h4>
-Tasks array(JSON) will appear here:<br>
-{{tasks}}
-<br>
-<br><br><br><hr>
+<div style="max-width: 60%;" class="container">
+
+<form @submit.prevent="loadTasks">
 <input type="text" placeholder="New task description" v-model="newTask" name="text" id="">
+&nbsp;&nbsp;
 <button @click="addTask">Add task</button>
-<br><br><br>
+</form>
+
+<h3>Current Tasks:</h3>
+<div v-if="typeof(tasks) === 'object'">
+<table class="table table-striped">
+<thead>
+  <th class="text-center">No.#</th>
+  <th class="text-center">Task</th>
+</thead>
+<tbody>
+<tr v-for="task in tasks.slice().reverse()" :key="task.id">
+<td>{{task.id}}</td>
+<td>{{task.description}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div v-else>
+  <h3 class="text-left">Login to connect with the API !</h3>
+</div>
+<hr>
 <div :key="msg.date" v-for="msg in errors" class="alert alert-danger alert-dismissible fade in out">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   {{msg.message}}

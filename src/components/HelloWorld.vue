@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-    <a href="#" class="active" @click="handleLogout" id="login-form-link">Logout</a>
     <div class="container">
     	<div class="row">
 			<div class="col-md-6 col-md-offset-3">
@@ -8,10 +7,10 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-6">
-								<a href="#" class="active" id="login-form-link">Login</a>
+								<a href="" class="active" id="login-form-link">Login</a>
 							</div>
 							<div class="col-xs-6">
-								<a href="#" id="register-form-link">Register</a>
+								<a href="" id="register-form-link">Register</a>
 							</div>
 						</div>
 						<hr>
@@ -26,17 +25,17 @@
 									<div class="form-group">
 										<input type="password" v-model="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
 									</div>
-									<div class="form-group text-center">
+									<!-- <div class="form-group text-center">
 										<input type="checkbox" tabindex="3" class="" name="remember" id="remember">
 										<label for="remember"> Remember Me</label>
-									</div>
+									</div> -->
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6">
 												<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
 											</div>
                       <div class="col-sm-6">
-                        <button @click="handleLogout" tabindex="5" class="form-control btn btn-login" >Log Out</button>
+                        <a @click="handleLogout" class="form-control btn btn-login" >Log Out</a>
                       </div>
 										</div>
 									</div>
@@ -52,13 +51,13 @@
 								</form>
 								<form id="register-form" @submit.prevent="handleRegister" method="post" role="form" style="display: none;">
 									<div class="form-group">
-										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+										<input type="text" v-model="username" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
 									</div>
 									<div class="form-group">
-										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+										<input type="password" v-model="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
 									</div>
 									<div class="form-group">
-										<input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+										<input type="password" v-model="confirmPassword" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
 									</div>
 									<div class="form-group">
 										<div class="row">
@@ -87,15 +86,9 @@
 </template>
 
 <script>
-// import login from "../utils/auth";
 import axios from "axios";
-import Router from "vue-router";
 
 const API_URL = "http://127.0.0.1:8080";
-
-var router = new Router({
-  mode: "history"
-});
 
 export default {
   name: "HelloWorld",
@@ -105,6 +98,7 @@ export default {
       email: "",
       username: "",
       password: "",
+      confirmPassword: "",
       errors: [],
       success: []
     };
@@ -112,6 +106,7 @@ export default {
   methods: {
     handleLogout() {
       if (sessionStorage.getItem("token") == null) return;
+
       this.success.push({
         message: "Logout successfull",
         date: new Date().getMilliseconds().toString()
@@ -120,9 +115,19 @@ export default {
       this.loggedIn = false;
     },
     handleRegister() {
+      if (this.password != this.confirmPassword) {
+        this.errors.push({
+          message: "Check again, passwords do not match!",
+          date: new Date().getMilliseconds().toString()
+        });
+        return;
+      }
       axios({
         method: "post",
         url: API_URL + "/users/sign-up",
+        headers: {
+          "Content-Type": "application/json"
+        },
         data: {
           username: this.username,
           password: this.password
@@ -145,6 +150,8 @@ export default {
         });
     },
     handleLogin() {
+      if (this.username == "" || this.password == "") return;
+
       let self = this;
       axios({
         method: "post",
