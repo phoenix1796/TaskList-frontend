@@ -8,12 +8,14 @@ yarn install
 
 ## Steps to run
 
-* Change API_URL in src/utils/Config.js as per need. (https://github.com/phoenix1796/SpringBoot-TaskList)
+* Change API_URL in src/utils/Config.js as per need. # Default Backend API URL set on localhost:8080
 
-* For development purposes
+  (https://github.com/phoenix1796/SpringBoot-TaskList)
+
+* For development/testing purposes
 
 ```
-yarn serve
+yarn serve # Uses default port as 5500
 ```
 
 or
